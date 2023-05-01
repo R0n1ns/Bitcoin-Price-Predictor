@@ -37,12 +37,30 @@ def cat_(data,cat):
         data = pd.get_dummies(data, columns=cat,dtype=float)
     return data
 
-def data_proc(data_loc,date=False,cat=[],drop = []):
+def data_save(data,par = 'r',path = None):
+    """
+        сохранение датасета в фаил
+    :param data: датасет
+    :param par: параметр для запаковки датасета,r = только возвращает датасет, s = сохранение в файл, rs = сохранение в файл и возвращает датасет, по умолчанилю = 'r'
+    :return:
+    """
+    if par == 'r':
+        return data
+    elif par == 's':
+        data.to_csv(path, index=False)
+    elif par == 'rs':
+        data.to_csv(path, index=False)
+        return data
+
+
+
+def data_proc(data_loc,date=False,cat=[],drop = [],save = "r"):
     """
         переработка данных
     :param data_loc: расположение данных
     :param date: если = True о дата будет преобразована в три столбца, если = False то дата уберается, по умолчанию = False
     :param cat: нужно передать название категориальных факторов в массиве, по умолчанию = []
+    :param save: параметр для запаковки датасета,r = только возвращает датасет, s = сохранение в файл, rs = сохранение в файл и возвращает датасет, по умолчанилю = 'r'
     :param drop: нужно передать названия нужных столбцов в массиве для удаления, по умолчанию = []
     :return: возвращает переработанный датасет
     """
@@ -50,4 +68,6 @@ def data_proc(data_loc,date=False,cat=[],drop = []):
     data = date_(data,date)
     data = data_drop(data,drop)
     data = cat_(data,cat)
+    path = data_loc[:-4]+"_proc.csv"
+    data = data_save(data = data,par = save,path=path)
     return data
